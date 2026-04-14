@@ -1,0 +1,155 @@
+.TH HSH 1 "April 2026" "1.0" "Simple Shell Manual"
+
+.SH NAME
+hsh \- a simple UNIX command line interpreter
+
+.SH SYNOPSIS
+.B hsh
+[\fIcommand\fR [\fIargument ...\fR]]
+
+.SH DESCRIPTION
+.B hsh
+is a simple UNIX shell that reads and executes commands from standard input.
+It replicates the core behavior of
+.B /bin/sh
+and supports both interactive and non-interactive modes.
+
+In interactive mode,
+.B hsh
+displays a prompt
+.B ($)
+and waits for the user to enter a command.
+
+In non-interactive mode, commands are read from a pipe or a file.
+
+.SH INVOCATION
+.TP
+.B Interactive mode
+Launch the shell directly:
+.IP
+.nf
+$ ./hsh
+($)
+.fi
+
+.TP
+.B Non-interactive mode
+Pipe commands into the shell:
+.IP
+.nf
+$ echo "/bin/ls" | ./hsh
+$ cat file_of_commands | ./hsh
+.fi
+
+.SH BUILT-IN COMMANDS
+
+.TP
+.B exit [\fIstatus\fR]
+Exit the shell. If a numeric
+.I status
+is provided, the shell exits with that status code.
+
+.TP
+.B env
+Print all environment variables of the current process to standard output.
+
+.SH PATH RESOLUTION
+When a command is entered without an absolute or relative path,
+.B hsh
+searches each directory listed in the
+.B PATH
+environment variable in order, and executes the first matching executable found.
+
+If no matching executable is found,
+.B hsh
+prints an error message to standard error:
+
+.IP
+.nf
+./hsh: 1: command: not found
+.fi
+
+.SH EXECUTION
+For each command entered,
+.B hsh
+creates a child process using
+.BR fork (2),
+then replaces the child's image with the requested program using
+.BR execve (2).
+The parent process waits for the child to terminate using
+.BR wait (2).
+
+.SH EOF / END OF FILE
+If
+.B Ctrl+D
+is entered in interactive mode, the shell exits gracefully, same as typing
+.BR exit .
+
+.SH ERROR HANDLING
+Error messages printed by
+.B hsh
+match those of
+.B /bin/sh
+in format, with the difference that the program name reflects
+.B argv[0]
+as passed to the shell:
+
+.IP
+.nf
+./hsh: 1: qwerty: not found
+./././hsh: 1: qwerty: not found
+.fi
+
+.SH COMPILATION
+.nf
+gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
+.fi
+
+.SH EXAMPLES
+
+.TP
+Run a command:
+.IP
+.nf
+($) /bin/ls
+hsh main.c shell.c
+.fi
+
+.TP
+Run a command with arguments:
+.IP
+.nf
+($) /bin/echo Hello World
+Hello World
+.fi
+
+.TP
+Display environment variables:
+.IP
+.nf
+($) env
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOME=/root
+...
+.fi
+
+.TP
+Exit the shell:
+.IP
+.nf
+($) exit
+$
+.fi
+
+.SH SEE ALSO
+.BR sh (1),
+.BR bash (1),
+.BR fork (2),
+.BR execve (2),
+.BR wait (2),
+.BR getline (3)
+
+.SH AUTHORS
+Thélyaan Dufrénoy <thelyaan444@hotmail.com>
+
+GitHub: https://github.com/BlackGhostMatrixx555
