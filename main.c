@@ -1,6 +1,42 @@
 #include "shell.h"
 
 /**
+ * process_line - Parses and executes one input line
+ * @line: the raw input string read from stdin
+ * @argv0: shell name for error messages
+ * @last_status: pointer to the last exit status to update
+ *
+ * Return: 1 if shell should exit, 0 otherwise
+ */
+static int process_line(char *line, char *argv0, int *last_status)
+{
+	char **args = NULL;
+	int builtin_ret = 0;
+
+	if (line[0] == '\0' || line[0] == '\n')
+		return (0);
+
+	args = split_line(line);
+	if (args == NULL || args[0] == NULL)
+	{
+		free_args(args);
+		return (0);
+	}
+
+	builtin_ret = handle_builtins(args);
+	if (builtin_ret == 2)
+	{
+		free_args(args);
+		return (1);
+	}
+	if (!builtin_ret)
+		*last_status = execute_command(args, argv0);
+
+	free_args(args);
+	return (0);
+}
+
+/**
  * main - Entry point of the simple shell
  * @argc: argument count (unused)
  * @argv: argument vector, argv[0] used for error messages
@@ -13,9 +49,7 @@ int main(int argc __attribute__((unused)),
 	char **env __attribute__((unused)))
 {
 	char *line = NULL;
-	char **args = NULL;
 	int last_status = 0;
-	int builtin_ret = 0;
 
 	while (1)
 	{
@@ -30,34 +64,14 @@ int main(int argc __attribute__((unused)),
 			break;
 		}
 
-		if (line[0] == '\0' || line[0] == '\n')
+		if (process_line(line, argv[0], &last_status))
 		{
 			free(line);
-			continue;
-		}
-
-		args = split_line(line);
-		if (args == NULL || args[0] == NULL)
-		{
-			free(line);
-			free_args(args);
-			continue;
-		}
-
-		builtin_ret = handle_builtins(args);
-		if (builtin_ret == 2)
-		{
-			free(line);
-			free_args(args);
 			return (last_status);
 		}
-		if (!builtin_ret)
-			last_status = execute_command(args, argv[0]);
 
 		free(line);
-		free_args(args);
 	}
 
-	free(line);
 	return (last_status);
 }
