@@ -45,9 +45,9 @@ char *read_line(void)
  * Searches PATH if the command has no slash. Does not fork
  * if the executable cannot be found.
  *
- * Return: void
+ * Return: exit status of the child, 127 if not found, -1 on fork error
  */
-void execute_command(char **args, char *argv0)
+int execute_command(char **args, char *argv0)
 {
 	pid_t pid;
 	int status;
@@ -59,7 +59,7 @@ void execute_command(char **args, char *argv0)
 		{
 			fprintf(stderr, "%s: 1: %s: not found\n",
 				argv0, args[0]);
-			return;
+			return (127);
 		}
 		cmd_path = args[0];
 	}
@@ -70,7 +70,7 @@ void execute_command(char **args, char *argv0)
 		{
 			fprintf(stderr, "%s: 1: %s: not found\n",
 				argv0, args[0]);
-			return;
+			return (127);
 		}
 	}
 
@@ -80,7 +80,7 @@ void execute_command(char **args, char *argv0)
 		perror("fork");
 		if (cmd_path != args[0])
 			free(cmd_path);
-		return;
+		return (-1);
 	}
 
 	if (pid == 0)
@@ -97,8 +97,11 @@ void execute_command(char **args, char *argv0)
 	else
 	{
 		waitpid(pid, &status, 0);
+		if (cmd_path != args[0])
+			free(cmd_path);
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
+		return (1);
 	}
-
-	if (cmd_path != args[0])
-		free(cmd_path);
+	return (0);
 }

@@ -6,7 +6,7 @@
  * @argv: argument vector, argv[0] used for error messages
  * @env: environment variables (unused, using extern environ)
  *
- * Return: 0 on success
+ * Return: last command exit status
  */
 int main(int argc __attribute__((unused)),
 	char **argv,
@@ -14,6 +14,7 @@ int main(int argc __attribute__((unused)),
 {
 	char *line = NULL;
 	char **args = NULL;
+	int last_status = 0;
 
 	while (1)
 	{
@@ -43,12 +44,12 @@ int main(int argc __attribute__((unused)),
 		}
 
 		if (!handle_builtins(args))
-			execute_command(args, argv[0]);
+			last_status = execute_command(args, argv[0]);
 
 		free(line);
 		free_args(args);
 	}
 
 	free(line);
-	return (0);
+	return (last_status);
 }

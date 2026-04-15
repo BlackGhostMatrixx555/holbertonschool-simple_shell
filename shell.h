@@ -14,7 +14,7 @@ extern char **environ;
 /* shell.c */
 void display_prompt(void);
 char *read_line(void);
-void execute_command(char **args, char *argv0);
+int execute_command(char **args, char *argv0);
 
 /* args.c */
 char **split_line(char *line);
