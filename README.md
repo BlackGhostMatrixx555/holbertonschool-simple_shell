@@ -1,3 +1,5 @@
+![Holberton School Logo](Holberton.svg)
+
 # Simple Shell - hsh
 
 A simple UNIX command line interpreter written in C, replicating the behavior of `/bin/sh`.
