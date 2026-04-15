@@ -24,13 +24,14 @@ void builtin_env(void)
  * @args: null-terminated array of arguments, args[0] is the command
  *
  * Handles: exit, env
+ * Return codes: 0 = not a builtin, 1 = builtin handled, 2 = exit requested
  *
- * Return: 1 if a built-in was matched and handled, 0 otherwise
+ * Return: 2 if exit, 1 if other builtin matched, 0 otherwise
  */
 int handle_builtins(char **args)
 {
 	if (strcmp(args[0], "exit") == 0)
-		exit(EXIT_SUCCESS);
+		return (2);
 
 	if (strcmp(args[0], "env") == 0)
 	{

@@ -15,6 +15,7 @@ int main(int argc __attribute__((unused)),
 	char *line = NULL;
 	char **args = NULL;
 	int last_status = 0;
+	int builtin_ret = 0;
 
 	while (1)
 	{
@@ -43,7 +44,14 @@ int main(int argc __attribute__((unused)),
 			continue;
 		}
 
-		if (!handle_builtins(args))
+		builtin_ret = handle_builtins(args);
+		if (builtin_ret == 2)
+		{
+			free(line);
+			free_args(args);
+			return (last_status);
+		}
+		if (!builtin_ret)
 			last_status = execute_command(args, argv[0]);
 
 		free(line);
