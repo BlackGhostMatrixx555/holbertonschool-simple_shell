@@ -92,8 +92,7 @@ static int fork_and_exec(char *cmd_path, char **args, char *argv0)
 		{
 			fprintf(stderr, "%s: 1: %s: not found\n",
 				argv0, args[0]);
-			if (cmd_path != args[0])
-				free(cmd_path);
+			free_path(cmd_path, args[0]);
 			exit(127);
 		}
 	}
@@ -124,8 +123,7 @@ int execute_command(char **args, char *argv0)
 
 	status = fork_and_exec(cmd_path, args, argv0);
 
-	if (cmd_path != args[0])
-		free(cmd_path);
+	free_path(cmd_path, args[0]);
 
 	return (status);
 }
