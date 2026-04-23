@@ -45,17 +45,3 @@ char **split_line(char *line)
 	return (args);
 }
 
-/**
- * free_args - Frees an array of argument strings
- * @args: the NULL-terminated array to free
- *
- * Note: does not free the strings themselves since they
- * point into the original line buffer.
- *
- * Return: void
- */
-void free_args(char **args)
-{
-	if (args != NULL)
-		free(args);
-}
