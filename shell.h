@@ -18,7 +18,6 @@ int execute_command(char **args, char *argv0);
 
 /* args.c */
 char **split_line(char *line);
-void free_args(char **args);
 
 /* path.c */
 char *find_in_path(char *cmd);
@@ -26,5 +25,14 @@ char *find_in_path(char *cmd);
 /* builtins.c */
 int handle_builtins(char **args);
 void builtin_env(void);
+
+/* utils.c */
+int _strlen(const char *s);
+char *_strdup(const char *s);
+char *_getenv(const char *name);
+
+/* free.c */
+void free_args(char **args);
+void free_path(char *path, char *original);
 
 #endif /* SHELL_H */
