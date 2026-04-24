@@ -1,6 +1,6 @@
 ![Holberton School Logo](Holberton.svg)
 
-# Simple Shell - hsh
+# Simple Shell - shell
 
 A simple UNIX command line interpreter written in C, replicating the behavior of `/bin/sh`.
 
@@ -22,7 +22,7 @@ A simple UNIX command line interpreter written in C, replicating the behavior of
 
 ## Description
 
-`hsh` is a simple UNIX shell written in C as part of the Holberton School curriculum.
+`shell` is a simple UNIX shell written in C as part of the Holberton School curriculum.
 It reads commands from standard input (interactive or non-interactive mode),
 searches for executables using the `PATH` environment variable, and executes them
 via `fork` and `execve`. It aims to replicate the behavior and output of `/bin/sh`.
@@ -44,7 +44,7 @@ Clone the repository and compile:
 ```bash
 git clone https://github.com/BlackGhostMatrixx555/holbertonschool-simple_shell.git
 cd holbertonschool-simple_shell
-gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
+gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o shell
 ```
 
 ---
@@ -54,9 +54,9 @@ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
 ### Interactive mode
 
 ```bash
-$ ./hsh
+$ ./shell
 ($) /bin/ls
-hsh main.c shell.c
+shell main.c shell.c
 ($)
 ($) exit
 $
@@ -65,11 +65,11 @@ $
 ### Non-interactive mode
 
 ```bash
-$ echo "/bin/ls" | ./hsh
-hsh main.c shell.c
-$ cat commands.txt | ./hsh
-hsh main.c shell.c
-hsh main.c shell.c
+$ echo "/bin/ls" | ./shell
+shell main.c shell.c
+$ cat commands.txt | ./shell
+shell main.c shell.c
+shell main.c shell.c
 ```
 
 ---
@@ -106,7 +106,7 @@ total 48
 drwxr-xr-x ...
 
 ($) nonexistent_command
-./hsh: 1: nonexistent_command: not found
+./shell: 1: nonexistent_command: not found
 
 ($) exit
 ```
@@ -115,13 +115,20 @@ drwxr-xr-x ...
 
 ## Error Handling
 
-When a command is not found, `hsh` prints an error in the following format:
+When a command is not found, `shell` prints an error in the following format:
 
 ```
-./hsh: 1: command: not found
+./shell: 1: command: not found
 ```
 
 This matches the behavior of `/bin/sh`, replacing the shell name with `argv[0]`.
+
+
+---
+
+## Flowchart
+
+![Flowchart Simple Shell Project](Flowchart.png)
 
 ---
 
@@ -129,11 +136,16 @@ This matches the behavior of `/bin/sh`, replacing the shell name with `argv[0]`.
 
 | File | Description |
 |------|-------------|
-| `main.c` | Entry point of the shell |
-| `shell.c` | Core shell logic |
-| `shell.h` | Header file with prototypes and includes |
+| `main.c` | Entry point and main loop |
+| `shell.c` | Prompt, read_line, resolve and execute commands |
+| `args.c` | split_line() — tokenizes the input line |
+| `path.c` | find_in_path() — PATH resolution |
+| `builtins.c` | Built-in commands: exit, env |
+| `utils.c` | Utility functions: _strlen, _strdup, _getenv |
+| `free.c` | Memory management: free_args, free_path |
+| `shell.h` | Header file with all prototypes and includes |
 | `README.md` | Project documentation |
-| `man_1_simple_shell` | Manual page for hsh |
+| `man_1_simple_shell` | Manual page for shell |
 | `AUTHORS` | List of contributors |
 
 ---
